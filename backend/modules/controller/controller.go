@@ -6,7 +6,7 @@ func ServerCheck(r fiber.Router) {
 	r.Get("/", _servercheck)
 }
 
-func Compile(r fiber.Router, lang string) {
+func Compile(r fiber.Router) {
 	r.Get("/output/:lang", _compile)
 }
 

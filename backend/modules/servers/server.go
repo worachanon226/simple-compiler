@@ -22,6 +22,11 @@ func NewServer(cfg *config.Config) *Server {
 }
 
 func (s *Server) Start() {
+	if err := s.Maphandler(); err != nil {
+		log.Fatalln(err.Error())
+		panic(err.Error())
+	}
+
 	fiberConn, err := utils.ConnectionBuilder("fiber", s.Cfg)
 	if err != nil {
 		log.Fatalln(err.Error())
