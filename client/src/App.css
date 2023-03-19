@@ -1,0 +1,30 @@
+.App {
+  margin-top: 10px;
+  margin-left: 50px;
+}
+
+.App-header {
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.body {
+  margin-top: 10px;
+}
+
+.textArea {
+  margin-top: 20px;
+}
+
+.textArea textarea {
+  width: 500px;
+  height: 500px;
+}
+
+.output {
+  margin-top: 20px;
+}
+
+.output .maintext {
+  font-weight: 700;
+}
