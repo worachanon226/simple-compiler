@@ -6,6 +6,7 @@ import (
 	"simple-compiler/backend/pkg/utils"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/cors"
 )
 
 type Server struct {
@@ -26,6 +27,11 @@ func (s *Server) Start() {
 		log.Fatalln(err.Error())
 		panic(err.Error())
 	}
+
+	s.App.Use(cors.Config{
+		AllowOrigins: "http://localhost:3000",
+		AllowHeaders: "Origin, Context-Type, Accept",
+	})
 
 	host := s.Cfg.App.Host
 	port := s.Cfg.App.Port
