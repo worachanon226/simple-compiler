@@ -7,7 +7,7 @@ func ServerCheck(r fiber.Router) {
 }
 
 func Compile(r fiber.Router) {
-	r.Get("/output/:lang", _compile)
+	r.Get("/run/:lang", _compile)
 }
 
 func _servercheck(c *fiber.Ctx) error {
@@ -16,6 +16,7 @@ func _servercheck(c *fiber.Ctx) error {
 
 func _compile(c *fiber.Ctx) error {
 	lang := c.Params("lang")
+	c.SendString(lang)
 	if lang == "cpp" {
 		return c.SendString(GenerateFile("cpp", string(c.Body())))
 	} else if lang == "py" {

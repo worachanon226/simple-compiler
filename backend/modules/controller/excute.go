@@ -10,10 +10,11 @@ import (
 
 func ExecutePy(path string) string {
 
-	cmd := exec.Command("python", path)
-
 	var out bytes.Buffer
 	var stderr bytes.Buffer
+
+	cmd := exec.Command("python", path)
+	fmt.Println(cmd)
 
 	cmd.Stdout = &out
 	cmd.Stderr = &stderr

@@ -11,7 +11,7 @@ import (
 func GenerateFile(format string, content string) string {
 
 	id := uuid.New()
-	filepath := fmt.Sprintf("../components/%s/code/%s.%s", format, id.String(), format)
+	filepath := fmt.Sprintf("./components/%s/code/%s.%s", format, id.String(), format)
 
 	file, err := os.Create(filepath)
 	if err != nil {
