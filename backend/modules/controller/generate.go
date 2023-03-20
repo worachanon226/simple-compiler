@@ -8,7 +8,7 @@ import (
 	"github.com/google/uuid"
 )
 
-func GenerateFile(format string, content string) string {
+func GenerateFile(format string, content string) (string, string) {
 
 	id := uuid.New()
 	filepath := fmt.Sprintf("./components/%s/code/%s.%s", format, id.String(), format)
@@ -18,14 +18,8 @@ func GenerateFile(format string, content string) string {
 		log.Fatal(err)
 	}
 
+	file.WriteString(content)
 	defer file.Close()
 
-	file.WriteString(content)
-	if format == "py" {
-		return ExecutePy(filepath)
-	} else if format == "cpp" {
-		return ExecuteCpp(filepath)
-	}
-
-	return "Error, format is wrong."
+	return "file is created sussess.", filepath
 }
