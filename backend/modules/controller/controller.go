@@ -16,59 +16,40 @@ func Compile(r fiber.Router) {
 	r.Post("/run", _compile)
 }
 
-func Execute(r fiber.Router) {
-	r.Get("/output", _excecute)
-}
-
 func _servercheck(c *fiber.Ctx) error {
 	return c.SendString("Server is OK.")
 }
 
-type Code struct {
-	filepath string
-	lang     string
-}
-
-var code Code
-
 func _compile(c *fiber.Ctx) error {
 	clientCode := entities.ClientCode{}
+
 	if err := c.BodyParser(&clientCode); err != nil {
 		return err
 	}
-	code.filepath = GenerateFile(clientCode.Lang, clientCode.Code)
-	code.lang = clientCode.Lang
 
-	return nil
-}
-
-func _excecute(c *fiber.Ctx) error {
-	if code.filepath == "" {
-		return errors.New("Error, filepath is empty.")
-	}
-	if code.lang == "cpp" {
+	filepath := GenerateFile(clientCode.Lang, clientCode.Code)
+	if clientCode.Lang == "cpp" {
 		output := entities.ClientOutput{
-			Output: ExecuteCpp(code.filepath),
+			Output: ExecuteCpp(filepath),
 		}
 		u, err := json.Marshal(output)
 
 		if err != nil {
-			return nil
+			return err
 		}
 
 		return c.SendString(string(u))
 
-	} else if code.lang == "py" {
+	} else if clientCode.Lang == "py" {
 		output := entities.ClientOutput{
-			Output: ExecutePy(code.filepath),
+			Output: ExecutePy(filepath),
 		}
 		u, err := json.Marshal(output)
 
 		if err != nil {
-			return nil
+			return err
 		}
 		return c.SendString(string(u))
 	}
-
-	return c.SendStatus(fiber.ErrBadRequest.Code)
+	return errors.New("Language is wrong.")
 }
