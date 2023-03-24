@@ -1,7 +1,9 @@
 package controller
 
 import (
+	"encoding/json"
 	"errors"
+	"simple-compiler/backend/modules/entities"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -11,44 +13,61 @@ func ServerCheck(r fiber.Router) {
 }
 
 func Compile(r fiber.Router) {
-	r.Get("/run/:lang", _compile)
+	r.Post("/run", _compile)
 }
 
 func Execute(r fiber.Router) {
-	r.Get("/output/:lang", _excecute)
+	r.Get("/output", _excecute)
 }
 
 func _servercheck(c *fiber.Ctx) error {
 	return c.SendString("Server is OK.")
 }
 
-var filepath = ""
+type Code struct {
+	filepath string
+	lang     string
+}
+
+var code Code
 
 func _compile(c *fiber.Ctx) error {
-	lang := c.Params("lang")
-
-	if lang == "cpp" {
-		status, file := GenerateFile("cpp", string(c.Body()))
-		filepath = file
-		return c.SendString(status)
-	} else if lang == "py" {
-		status, file := GenerateFile("py", string(c.Body()))
-		filepath = file
-		return c.SendString(status)
+	clientCode := entities.ClientCode{}
+	if err := c.BodyParser(&clientCode); err != nil {
+		return err
 	}
+	code.filepath = GenerateFile(clientCode.Lang, clientCode.Code)
+	code.lang = clientCode.Lang
 
-	return c.SendStatus(fiber.ErrBadRequest.Code)
+	return nil
 }
 
 func _excecute(c *fiber.Ctx) error {
-	lang := c.Params("lang")
-	if filepath == "" {
+	if code.filepath == "" {
 		return errors.New("Error, filepath is empty.")
 	}
-	if lang == "cpp" {
-		return c.SendString(ExecuteCpp(filepath))
-	} else if lang == "py" {
-		return c.SendString(ExecutePy(filepath))
+	if code.lang == "cpp" {
+		output := entities.ClientOutput{
+			Output: ExecuteCpp(code.filepath),
+		}
+		u, err := json.Marshal(output)
+
+		if err != nil {
+			return nil
+		}
+
+		return c.SendString(string(u))
+
+	} else if code.lang == "py" {
+		output := entities.ClientOutput{
+			Output: ExecutePy(code.filepath),
+		}
+		u, err := json.Marshal(output)
+
+		if err != nil {
+			return nil
+		}
+		return c.SendString(string(u))
 	}
 
 	return c.SendStatus(fiber.ErrBadRequest.Code)

@@ -3,6 +3,7 @@ package controller
 import (
 	"bytes"
 	"fmt"
+	"os"
 	"os/exec"
 	"path"
 	"strings"
@@ -13,7 +14,10 @@ func ExecutePy(path string) string {
 	var out bytes.Buffer
 	var stderr bytes.Buffer
 
-	cmd := exec.Command("python", path)
+	dir, _ := os.Getwd()
+
+	fmt.Println(dir + path[1:])
+	cmd := exec.Command("python3", dir+path[1:])
 	fmt.Println(cmd)
 
 	cmd.Stdout = &out

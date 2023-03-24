@@ -8,7 +8,7 @@ import (
 	"github.com/google/uuid"
 )
 
-func GenerateFile(format string, content string) (string, string) {
+func GenerateFile(format string, content string) string {
 
 	id := uuid.New()
 	filepath := fmt.Sprintf("./components/%s/code/%s.%s", format, id.String(), format)
@@ -21,5 +21,5 @@ func GenerateFile(format string, content string) (string, string) {
 	file.WriteString(content)
 	defer file.Close()
 
-	return "file is created sussess.", filepath
+	return filepath
 }

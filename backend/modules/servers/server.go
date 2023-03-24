@@ -32,11 +32,7 @@ func (s *Server) Start() {
 		log.Fatalln(err.Error())
 		panic(err.Error())
 	}
-
-	s.App.Use(cors.New(cors.Config{
-		AllowOrigins: "http://localhost:3000",
-		AllowHeaders: "Origin, Context-Type, Accept",
-	}))
+	s.App.Use(cors.New())
 
 	host := s.Cfg.App.Host
 	port := s.Cfg.App.Port
