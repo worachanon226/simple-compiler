@@ -15,8 +15,11 @@ type Server struct {
 }
 
 func NewServer(cfg *config.Config) *Server {
+	app := fiber.New()
+	app.Use(cors.New())
+	
 	return &Server{
-		App: fiber.New(),
+		App: app,
 		Cfg: cfg,
 	}
 }
@@ -32,7 +35,8 @@ func (s *Server) Start() {
 		log.Fatalln(err.Error())
 		panic(err.Error())
 	}
-	s.App.Use(cors.New())
+
+	// s.App.Use(cors.New())
 
 	host := s.Cfg.App.Host
 	port := s.Cfg.App.Port

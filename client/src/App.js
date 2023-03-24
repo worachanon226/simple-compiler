@@ -16,24 +16,13 @@ function App() {
 
   async function complie() {
     setIsCompiling(true);
-    const clientCode = JSON.stringify({ lang: nowLang, code: textCode })
-    const input = await axios.post(`${ENDPOINT}/run`, clientCode, {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      'Access-Control-Allow-Origin': '*'
+    const input = await axios.post(`${ENDPOINT}/run`, {
+      lang: nowLang,
+      code: textCode
     });
 
-    const output = await axios.get(`${ENDPOINT}/ouput`)
-    console.log(output.data)
-
-    // console.log(textCode)
-    // console.log(`${ENDPOINT}/output/${nowLang}`)
-
-    // const output = await fetch(`${ENDPOINT}/output/${nowLang}`, { mode: 'no-cors' });
-
-    // console.log("Output success");
-    // console.log(output)
+    const output = await axios.get(`${ENDPOINT}/output`);
+    setOutput(output.data.output)
 
     setIsCompiling(false);
   }
@@ -69,7 +58,7 @@ function App() {
           }}></textarea>
         </div>
 
-        <button onClick={complie} disabled={isCompiling}>
+        <button onClick={complie}>
           Compile
         </button>
 
