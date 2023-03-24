@@ -15,15 +15,17 @@ function App() {
   const [isCompiling, setIsCompiling] = useState(false);
 
   async function complie() {
-    setIsCompiling(true);
-    const input = await axios.post(`${ENDPOINT}/run`, {
-      lang: nowLang,
-      code: textCode
-    });
+    if (nowLang != "") {
+      setIsCompiling(true);
+      const input = await axios.post(`${ENDPOINT}/run`, {
+        lang: nowLang,
+        code: textCode
+      });
 
-    setOutput(input.data.output)
+      setOutput(input.data.output)
 
-    setIsCompiling(false);
+      setIsCompiling(false);
+    }
   }
 
   const changeLang = (e) => {
@@ -45,7 +47,7 @@ function App() {
         <div>
           <a>Language: </a>
           <select value={nowLang} onChange={changeLang}>
-            <option value="">Choose the Language</option>
+            <option value="null">Choose the Language</option>
             <option value="cpp">C++</option>
             <option value="py">Python</option>
           </select>
@@ -57,7 +59,7 @@ function App() {
           }}></textarea>
         </div>
 
-        <button onClick={complie}>
+        <button onClick={complie} disabled={isCompiling}>
           Compile
         </button>
 

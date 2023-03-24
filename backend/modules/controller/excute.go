@@ -3,7 +3,6 @@ package controller
 import (
 	"bytes"
 	"fmt"
-	"log"
 	"os"
 	"os/exec"
 	"path"
@@ -54,12 +53,5 @@ func ExecuteCpp(file string) string {
 		return fmt.Sprint(err) + ": " + stderr.String()
 	} else {
 		return build_out.String()
-	}
-}
-
-func DeleteFile(file string, lang string) {
-	e := os.Remove(file)
-	if e != nil {
-		log.Fatal(e)
 	}
 }
