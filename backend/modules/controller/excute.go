@@ -3,6 +3,7 @@ package controller
 import (
 	"bytes"
 	"fmt"
+	"log"
 	"os"
 	"os/exec"
 	"path"
@@ -16,10 +17,7 @@ func ExecutePy(path string) string {
 
 	dir, _ := os.Getwd()
 
-	fmt.Println(dir + path[1:])
 	cmd := exec.Command("python3", dir+path[1:])
-	fmt.Println(cmd)
-
 	cmd.Stdout = &out
 	cmd.Stderr = &stderr
 
@@ -34,10 +32,9 @@ func ExecutePy(path string) string {
 func ExecuteCpp(file string) string {
 	jobID := strings.Split(path.Base(file), ".")[0]
 	outPath := path.Join("components", "cpp", "output", jobID)
-	output := fmt.Sprintf("components/" + "cpp/" + "output/" + jobID + ".exe")
 	cmd := exec.Command("g++", file, "-o", outPath)
 
-	build := exec.Command(output)
+	output := fmt.Sprintf("components/" + "cpp/" + "output/" + jobID)
 
 	var out bytes.Buffer
 	var stderr bytes.Buffer
@@ -48,6 +45,7 @@ func ExecuteCpp(file string) string {
 	cmd.Stderr = &stderr
 	err := cmd.Run()
 
+	build := exec.Command("./" + output)
 	build.Stdout = &build_out
 	build.Stderr = &build_stderr
 	build_err := build.Run()
@@ -56,5 +54,12 @@ func ExecuteCpp(file string) string {
 		return fmt.Sprint(err) + ": " + stderr.String()
 	} else {
 		return build_out.String()
+	}
+}
+
+func DeleteFile(file string, lang string) {
+	e := os.Remove(file)
+	if e != nil {
+		log.Fatal(e)
 	}
 }

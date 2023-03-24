@@ -21,8 +21,7 @@ function App() {
       code: textCode
     });
 
-    const output = await axios.get(`${ENDPOINT}/output`);
-    setOutput(output.data.output)
+    setOutput(input.data.output)
 
     setIsCompiling(false);
   }

@@ -49,6 +49,8 @@ func _compile(c *fiber.Ctx) error {
 		if err != nil {
 			return err
 		}
+
+		DeleteFile(filepath, "py")
 		return c.SendString(string(u))
 	}
 	return errors.New("Language is wrong.")
