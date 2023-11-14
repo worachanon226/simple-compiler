@@ -16,19 +16,34 @@ jobs:
       run:
         working-directory: ./backend
     steps:
-      - uses: actions/checkout@v4
-      - name: Setup Go
-        uses: actions/setup-go@v4
-        with:
-          go-version: ${{ matrix.go-version }}
-      - name: Install dependencies
-        run: go get .
+     - uses: actions/checkout@v2
 
-      - name: Upload Go test results
-        uses: actions/upload-artifact@v3
-        with:
-          name: Go-results-${{ matrix.go-version }}
-          path: TestResults-${{ matrix.go-version }}.json
+    - name: Set up Go
+      uses: actions/setup-go@v2
+
+    - name: Verify dependencies
+      run: go mod verify
+
+    - name: Build
+      run: go build -v ./...
+
+    - name: Run go vet
+      run: go vet ./...
+
+    - name: Install staticcheck
+      run: go install honnef.co/go/tools/cmd/staticcheck@latest
+
+    - name: Run staticcheck
+      run: staticcheck ./...
+
+    - name: Install golint
+      run: go install golang.org/x/lint/golint@latest
+
+    - name: Run golint
+      run: golint ./...
+
+    - name: Run tests
+      run: go test -race -vet=off ./...
 
   # build-test-frontend:
   #   runs-on: ubuntu-latest
