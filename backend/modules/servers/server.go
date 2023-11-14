@@ -36,8 +36,10 @@ func (s *Server) Start() {
 		panic(err.Error())
 	}
 
-	host := s.Cfg.App.Host
-	port := s.Cfg.App.Port
+	// host := s.Cfg.App.Host
+	// port := s.Cfg.App.Port
+	host := "0.0.0.0"
+	port := "8000"
 
 	log.Printf("server has been started on %s:%s", host, port)
 
